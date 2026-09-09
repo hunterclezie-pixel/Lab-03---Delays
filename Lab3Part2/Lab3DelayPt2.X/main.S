@@ -57,6 +57,8 @@ Setup:
     BSF 0x03,5 ; Sets Bank 3
     CLRF 0x89 ; Setting the ANSELH to LOW for the I/O to be digital
     
+    BCF 0x03,6 ; Sets Bank 0
+    BCF 0x03,5 ; Sets Bank 0
     goto Main
     
 Main:
