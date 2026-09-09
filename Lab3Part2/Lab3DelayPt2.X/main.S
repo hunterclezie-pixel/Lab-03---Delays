@@ -1,7 +1,7 @@
 // Hunter Clezie
 // RCET3375
-// Lab2PICPt2
-// https://github.com/hunterclezie-pixel/Lab-02---PIC16F883-I-O-Familiarization.git
+// Lab3DelayPt2
+// https://github.com/hunterclezie-pixel/Lab-03---Delays.git
 
 ; PIC16F883 Configuration Bit Settings
 
@@ -61,8 +61,7 @@ Setup:
     
 Main:
     // main code goes here
-    BCF 0x03,6 ; Sets Bank 0
-    BCF 0x03,5 ; Sets Bank 0
-    INCF 0x06,1 ; Increment PORTB by 1
-    goto Main
+    MOVLW 0x01      ; 1 TCY 
+    XORWF PORTB,1   ; 1 TCY  
+    GOTO Main	    ; 2 TCY
 End
