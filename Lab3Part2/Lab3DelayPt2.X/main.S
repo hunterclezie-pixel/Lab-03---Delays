@@ -57,13 +57,20 @@ Setup:
     BSF 0x03,5 ; Sets Bank 3
     CLRF 0x89 ; Setting the ANSELH to LOW for the I/O to be digital
     
-    BCF 0x03,6 ; Sets Bank 0
-    BCF 0x03,5 ; Sets Bank 0
-    goto Main
+    BCF 0x03,6		; Sets Bank 0
+    BCF 0x03,5		; Sets Bank 0
+    count EQU 0x20	;use data memory address 0x20 as an 8-bit loop counter  
+    GOTO Main
     
 Main:
-    // main code goes here
-    MOVLW 0x01      ; 1 TCY 
-    XORWF PORTB,1   ; 1 TCY  
-    GOTO Main	    ; 2 TCY
+    MOVLW 0x01                ;1 TCY code not part of delay
+    XORWF PORTB,1             ;1 TCY code not part of delay
+
+    MOVLW 0x0F                ;1 TCY delay overhead
+    MOVWF count               ;1 TCY delay overhead
+    
+DelayLoop:                     
+    DECFSZ count,1            ;1(2) 1 TCY if not zero, 2 TCY if zero
+    GOTO DelayLoop            ;2 TCY
+    GOTO Main                 ;2 TCY code not part of delay
 End
