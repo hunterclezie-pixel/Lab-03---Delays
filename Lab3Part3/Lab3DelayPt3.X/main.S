@@ -85,19 +85,29 @@ Setup:
     outCount EQU 0x20
     midCount EQU 0x21
     inCount EQU 0x22
+    MOVLW 0x30
+    MOVWF 0x07
     GOTO Main
     
 Main:
     MOVLW 0x05          ;1 TCY
-    XORWF 0x07,F        ;1 TCY
+    XORWF 0x07,1	;1 TCY
 
     MOVLW 0X04          ;1 TCY
     MOVWF outCount      ;1 TCY
-    goto OutDelay     ;2 TCY
+    NOP
+    NOP
+    NOP
+    goto OutDelay	;2 TCY
 
 OutDelay:
     MOVLW 0XC0          ;1 TCY
     MOVWF midCount      ;1 TCY
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
     goto MidDelay       ;2 TCY
 
 MidDelay:
@@ -113,7 +123,7 @@ InDelay:
     goto MidDelay       ;2 TCY
 
     DECFSZ outCount     ;1 (2) TCY
-    goto OutDelay     ;2 TCY
+    goto OutDelay	;2 TCY
     goto Main           ;2 TCY
     
 End
