@@ -80,9 +80,7 @@ Setup:
     
     ; PORTB Code:
     CLRF 0x89 ; Setting the ANSELH to LOW for the I/O to be digital
-    BCF 0x03, 6
-    BCF 0x03, 5
-    
+
     BCF 0x03,6		; Sets Bank 0
     BCF 0x03,5		; Sets Bank 0
     MOVLW 0x30
@@ -93,6 +91,7 @@ Main:
     MOVLW 0x05	    ; 1TCY
     XORWF 0x07,1    ; 1TCY
     CALL outDelay   ; 2TCY
+    NOP
     goto Main	    ; 2TCY
 
 outDelay:
@@ -107,6 +106,12 @@ outLoop:
 
 midDelay:
     MOVLW 0xB7	    ; 1TCY
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
     MOVWF midCount  ; 1TCY
 
 midLoop:
