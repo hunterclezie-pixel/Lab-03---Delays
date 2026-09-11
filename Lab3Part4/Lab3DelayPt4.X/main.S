@@ -25,6 +25,9 @@
 
 // config statements should precede project file includes.
 #include <xc.inc>
+  outCount EQU 0x20
+  midCount EQU 0x21
+  inCount EQU 0x22
   
 ; Reset Vector at 0000h. Execution starts here after reset.
 PSECT resetVect,class=CODE,delta=2
@@ -82,48 +85,43 @@ Setup:
     
     BCF 0x03,6		; Sets Bank 0
     BCF 0x03,5		; Sets Bank 0
-    outCount EQU 0x20
-    midCount EQU 0x21
-    inCount EQU 0x22
     MOVLW 0x30
     MOVWF 0x07
     GOTO Main
     
 Main:
-    MOVLW 0x05          ;1 TCY
-    XORWF 0x07,1	;1 TCY
+    MOVLW 0x05	    ; 1TCY
+    XORWF 0x07,1    ; 1TCY
+    CALL outDelay   ; 2TCY
+    goto Main	    ; 2TCY
 
-    MOVLW 0X04          ;1 TCY
-    MOVWF outCount      ;1 TCY
-    NOP
-    NOP
-    NOP
-    goto OutDelay	;2 TCY
+outDelay:
+    MOVLW 0x04	    ; 1TCY
+    MOVWF outCount  ; 1TCY
 
-OutDelay:
-    MOVLW 0XC0          ;1 TCY
-    MOVWF midCount      ;1 TCY
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    goto MidDelay       ;2 TCY
+outLoop:
+    CALL midDelay   ; 2TCY
+    DECFSZ outCount ; 1(2)TCY
+    goto outLoop    ; 2TCY
+    RETURN	    ; 2TCY
 
-MidDelay:
-    MOVLW 0xD7          ;1 TCY
-    MOVWF inCount       ;1 TCY
-    goto InDelay        ;2 TCY
+midDelay:
+    MOVLW 0xB7	    ; 1TCY
+    MOVWF midCount  ; 1TCY
 
-InDelay:
-    DECFSZ inCount      ;1 (2) TCY
-    goto InDelay        ;2 TCY
+midLoop:
+    CALL inDelay    ; 2TCY
+    DECFSZ midCount ; 1(2)TCY
+    goto midLoop    ; 2TCY
+    RETURN	    ; 2TCY
 
-    DECFSZ midCount     ;1 (2) TCY
-    goto MidDelay       ;2 TCY
+inDelay:
+    MOVLW 0xE1	    ; 1TCY
+    MOVWF inCount   ; 1TCY
 
-    DECFSZ outCount     ;1 (2) TCY
-    goto OutDelay	;2 TCY
-    goto Main           ;2 TCY
+inLoop:
+    DECFSZ inCount  ; 1(2)TCY
+    goto inLoop	    ; 2TCY
+    RETURN	    ; 2TCY
     
 End
